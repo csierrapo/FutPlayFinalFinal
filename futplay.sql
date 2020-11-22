@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 25-05-2020 a las 23:50:56
+-- Tiempo de generación: 22-11-2020 a las 15:48:45
 -- Versión del servidor: 10.1.13-MariaDB
 -- Versión de PHP: 7.0.8
 
@@ -32,17 +32,26 @@ CREATE TABLE `calendar` (
   `start` datetime NOT NULL,
   `end` datetime NOT NULL,
   `color` varchar(45) NOT NULL,
-  `campo` int(11) NOT NULL
+  `campo` int(11) NOT NULL,
+  `Encuentro` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `calendar`
 --
 
-INSERT INTO `calendar` (`id`, `title`, `start`, `end`, `color`, `campo`) VALUES
-(3, '#1 Futbol 5', '2018-02-26 07:30:00', '2018-02-27 12:00:00', 'rgb(244, 67, 54)', 1),
-(10, '#1 Futbol 5', '2017-09-22 09:30:00', '2017-09-22 10:30:00', 'rgb(244, 67, 54)', 1),
-(19, '#1 Futbol 5', '2020-05-28 07:30:00', '2020-05-28 09:30:00', 'rgb(244, 67, 54)', 1);
+INSERT INTO `calendar` (`id`, `title`, `start`, `end`, `color`, `campo`, `Encuentro`) VALUES
+(3, '#1 Futbol 5', '2018-02-26 07:30:00', '2018-02-27 12:00:00', 'rgb(244, 67, 54)', 1, NULL),
+(4, '#1 Futbol 5', '2020-11-01 16:00:00', '2020-11-01 17:00:00', 'rgb(244, 67, 54)', 1, NULL),
+(10, '#1 Futbol 5', '2020-09-10 08:00:00', '2020-09-10 09:00:00', 'rgb(244, 67, 54)', 1, NULL),
+(11, '#1 Futbol 5', '2020-09-08 08:00:00', '2020-09-08 09:00:00', 'rgb(244, 67, 54)', 1, NULL),
+(19, '#1 Futbol 5', '2020-05-28 07:30:00', '2020-05-28 09:30:00', 'rgb(244, 67, 54)', 1, 1),
+(20, 'Encuentro', '2020-01-11 01:00:00', '2020-01-11 02:00:00', 'rgb(244, 67, 54)', 1, 1),
+(21, 'Encuentro', '2020-11-01 01:00:00', '2020-11-01 02:00:00', 'rgb(244, 67, 54)', 1, 1),
+(23, 'Encuentro', '2020-11-01 13:00:00', '2020-11-01 14:00:00', 'rgb(244, 67, 54)', 1, 4),
+(24, 'Encuentro', '2020-11-01 22:00:00', '2020-11-01 23:00:00', 'rgb(244, 67, 54)', 1, 5),
+(25, 'Encuentro', '2020-11-02 15:00:00', '2020-11-02 16:00:00', 'rgb(244, 67, 54)', 1, 6),
+(26, 'Encuentro', '2020-11-22 17:00:00', '2020-11-22 18:00:00', 'rgb(244, 67, 54)', 1, 7);
 
 -- --------------------------------------------------------
 
@@ -66,7 +75,7 @@ CREATE TABLE `campo` (
 --
 
 INSERT INTO `campo` (`idCampo`, `Nombre`, `Direccion`, `Ubicacion`, `Horario`, `Rating`, `Foto`, `Propietario`) VALUES
-(1, 'Topochos', 'Sogamoso', 'Sogamoso', '11:11/11:11', NULL, 'campofutbol_1_pasador.jpg', 1);
+(1, 'Topochos', 'Sogamoso', '4.6481609/-434.06916708', '11:11/11:11', NULL, 'campofutbol_1_pasador.jpg', 1);
 
 -- --------------------------------------------------------
 
@@ -91,6 +100,41 @@ INSERT INTO `cancha` (`idCancha`, `Numero`, `Tipo_Cancha`, `Campo`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `comentario`
+--
+
+CREATE TABLE `comentario` (
+  `idComentario` int(11) NOT NULL,
+  `Contenido` text NOT NULL,
+  `Fecha` datetime NOT NULL,
+  `Tipo` enum('Jugador','Equipo','Cancha','Campo') NOT NULL,
+  `JugadorComentario` int(11) NOT NULL,
+  `JugadorComentado` int(11) DEFAULT NULL,
+  `CanchaComentado` int(11) DEFAULT NULL,
+  `EquipoComentado` int(11) DEFAULT NULL,
+  `CampoComentado` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Volcado de datos para la tabla `comentario`
+--
+
+INSERT INTO `comentario` (`idComentario`, `Contenido`, `Fecha`, `Tipo`, `JugadorComentario`, `JugadorComentado`, `CanchaComentado`, `EquipoComentado`, `CampoComentado`) VALUES
+(1, 'Hola', '2020-10-25 19:36:27', 'Jugador', 2, 13, 0, 0, 0),
+(2, 'Hola', '2020-10-25 19:37:46', 'Jugador', 2, 13, 0, 0, 0),
+(3, 'Muy buen jugador.', '2020-10-25 19:52:01', 'Jugador', 2, 16, 0, 0, 0),
+(4, 'El mejor portero.', '2020-10-25 20:43:18', 'Jugador', 2, 16, 0, 0, 0),
+(5, 'El comentario', '2020-10-25 20:47:49', 'Jugador', 2, 16, 0, 0, 0),
+(6, 'Comentando.', '2020-10-25 20:48:28', 'Jugador', 2, 16, 0, 0, 0),
+(7, 'Muy buen jugador.', '2020-10-25 20:53:25', 'Jugador', 2, 2, 0, 0, 0),
+(8, 'El mejor compa.', '2020-11-01 15:13:23', 'Jugador', 2, 7, 0, 0, 0),
+(9, 'Buen jugador.', '2020-11-02 12:48:45', 'Jugador', 3, 9, 0, 0, 0),
+(10, 'Muy buen jugador.', '2020-11-16 10:36:20', 'Jugador', 2, 16, 0, 0, 0),
+(11, 'El mejor capitan de todos.', '2020-11-16 10:53:21', 'Jugador', 3, 2, 0, 0, 0);
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `encuentro`
 --
 
@@ -104,6 +148,19 @@ CREATE TABLE `encuentro` (
   `Equipo_A` int(11) NOT NULL,
   `Equipo_B` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Volcado de datos para la tabla `encuentro`
+--
+
+INSERT INTO `encuentro` (`idEncuentro`, `Tipo`, `Fecha_Hora`, `Marcador`, `Estado`, `Cancha`, `Equipo_A`, `Equipo_B`) VALUES
+(1, '5', '2020-11-01 15:01:10', '2/3', 'Finalizado', 1, 2, 3),
+(2, '5', '2020-11-01 21:18:02', '3/2', 'Finalizado', 1, 2, 3),
+(3, '5', '2020-11-01 22:49:53', '4/3', 'Finalizado', 1, 2, 3),
+(4, '5', '2020-11-01 22:57:45', '5/1', 'Finalizado', 1, 2, 3),
+(5, '5', '2020-11-01 23:09:09', '3/3', 'Finalizado', 1, 2, 3),
+(6, '5', '2020-11-02 20:51:39', '0/0', 'Finalizado', 1, 2, 3),
+(7, '5', '2020-11-22 12:27:35', '2/3', 'Finalizado', 1, 3, 2);
 
 -- --------------------------------------------------------
 
@@ -168,7 +225,7 @@ CREATE TABLE `jugador` (
 INSERT INTO `jugador` (`idJugador`, `Alias`, `Posicion`, `Pierna`, `Descripcion`, `RankingSystem`, `RankingUsers`, `Estado`, `Capitan`, `Equipo`, `Persona`) VALUES
 (2, 'Andres99', 'Delantero', 'Derecha', 'Hola a todos.', 100, '2~1/', 'Activo', 1, 2, 2),
 (3, 'pepee', 'Portero', 'Derecha', 'dddd', 33, '', 'Activo', 1, 3, 3),
-(4, 'pepe1', 'Defensor', 'Derecha', 'no se que escribir', 25, '', 'Activo', 0, 2, 4),
+(4, 'pepe1', 'Defensor', 'Derecha', 'no se que escribir', 25, '2~1/', 'Activo', 0, 2, 4),
 (5, 'pepe2', 'Mediocampista', 'Izquierda', 'no se que escribir', 0, '2~0/', 'Activo', 0, 2, 5),
 (6, 'pepe3', 'Mediocampista', 'Ambas', 'no se que escribir', 33, '', 'Activo', 0, 1, 6),
 (7, 'pepe4', 'Delantero', 'Izquierda', 'no se que escribir', 100, '', 'Activo', 0, 2, 7),
@@ -180,7 +237,8 @@ INSERT INTO `jugador` (`idJugador`, `Alias`, `Posicion`, `Pierna`, `Descripcion`
 (13, 'pepe10', 'Defensor', 'Ambas', 'no se que escribir', 33, '14~1/', 'Activo', 0, 4, 13),
 (14, 'FutPlay', 'Delantero', 'Ambas', 'FutPlay', 100, '', 'Activo', 1, 4, 15),
 (15, 'juancho', 'Defensor', 'Ambas', 'soy el mejor', 16, '', 'Activo', 0, 1, 16),
-(16, 'usuario1', 'Portero', 'Izquierda', 'Soy nuevo :)', 8, '', 'Activo', 1, 5, 17);
+(16, 'usuario1', 'Portero', 'Izquierda', 'Soy nuevo :)', 8, '2~1/', 'Activo', 1, 5, 17),
+(17, 'usuarioPrueba', 'Defensor', 'Derecha', 'Hola', 75, '', 'Activo', 0, 2, 18);
 
 -- --------------------------------------------------------
 
@@ -213,7 +271,8 @@ INSERT INTO `mensaje` (`idMensaje`, `Contenido`, `Fecha`, `Hora`, `Jugador`, `Eq
 (9, 'Hola equipo', '2017-09-27', '04:55 1', 14, 4),
 (10, 'He vuelto después de mucho tiempo ', '2017-11-06', '09:36 1', 2, 2),
 (11, 'Hola', '2020-05-25', '07:54 1', 2, 2),
-(12, 'Hola equipo!', '2020-05-25', '11:01 1', 16, 5);
+(12, 'Hola equipo!', '2020-05-25', '11:01 1', 16, 5),
+(13, 'Hola a todos', '2020-11-22', '00:01 1', 17, 2);
 
 -- --------------------------------------------------------
 
@@ -242,9 +301,9 @@ CREATE TABLE `notificacion` (
 
 INSERT INTO `notificacion` (`idNotificacion`, `Fecha`, `Hora`, `Tipo`, `Visto`, `JugadorEnvia`, `JugadorRecibe`, `PropietarioEnvia`, `PropietarioRecibe`, `DatosAdicionales`, `EquipoEnvia`, `EquipoRecibe`) VALUES
 (2, '2017-09-16', '10:19 1', 'Registro', '/2', 0, 2, 0, 0, '', 0, 0),
-(3, '2017-09-16', '10:26 1', 'CrearEquipo', '/2/4/5', 2, 0, 0, 0, '', 0, 2),
-(4, '2017-09-17', '9:6 0', 'EditarEquipo', '/2/4/5', 2, 0, 0, 0, '', 2, 2),
-(5, '2017-09-17', '09:31 0', 'EditarEquipo', '/2/4/5', 2, 0, 0, 0, '', 2, 2),
+(3, '2017-09-16', '10:26 1', 'CrearEquipo', '/2/4/5/17', 2, 0, 0, 0, '', 0, 2),
+(4, '2017-09-17', '9:6 0', 'EditarEquipo', '/2/4/5/17', 2, 0, 0, 0, '', 2, 2),
+(5, '2017-09-17', '09:31 0', 'EditarEquipo', '/2/4/5/17', 2, 0, 0, 0, '', 2, 2),
 (6, '2017-09-17', '00:42 1', 'Registro', '/3', 0, 3, 0, 0, '', 0, 0),
 (7, '2017-09-17', '00:43 1', 'Registro', '/4', 0, 4, 0, 0, '', 0, 0),
 (8, '2017-09-17', '00:44 1', 'Registro', '/5', 0, 5, 0, 0, '', 0, 0),
@@ -256,12 +315,12 @@ INSERT INTO `notificacion` (`idNotificacion`, `Fecha`, `Hora`, `Tipo`, `Visto`, 
 (14, '2017-09-17', '00:48 1', 'FicharJugador', '', 2, 6, 0, 0, '2', 0, 0),
 (15, '2017-09-17', '00:48 1', 'FicharJugador', '/7', 2, 7, 0, 0, '2', 0, 0),
 (16, '2017-09-17', '00:48 1', 'FicharJugador', '/8', 2, 8, 0, 0, '2', 0, 0),
-(17, '2017-09-17', '00:49 1', 'JugadorAgregado', '/4/5/2', 0, 4, 0, 0, '', 0, 2),
-(18, '2017-09-17', '00:50 1', 'EditarEquipo', '/4/5/2', 4, 0, 0, 0, '', 2, 2),
-(19, '2017-09-17', '00:50 1', 'EditarEquipo', '/4/5/2', 2, 0, 0, 0, '', 2, 2),
-(20, '2017-09-17', '00:51 1', 'JugadorAgregado', '/5/2/4', 0, 5, 0, 0, '', 0, 2),
-(21, '2017-09-17', '00:52 1', 'JugadorAgregado', '/2/4', 0, 7, 0, 0, '', 0, 2),
-(22, '2017-09-17', '00:53 1', 'JugadorAgregado', '/2/4', 0, 8, 0, 0, '', 0, 2),
+(17, '2017-09-17', '00:49 1', 'JugadorAgregado', '/4/5/2/17', 0, 4, 0, 0, '', 0, 2),
+(18, '2017-09-17', '00:50 1', 'EditarEquipo', '/4/5/2/17', 4, 0, 0, 0, '', 2, 2),
+(19, '2017-09-17', '00:50 1', 'EditarEquipo', '/4/5/2/17', 2, 0, 0, 0, '', 2, 2),
+(20, '2017-09-17', '00:51 1', 'JugadorAgregado', '/5/2/4/17', 0, 5, 0, 0, '', 0, 2),
+(21, '2017-09-17', '00:52 1', 'JugadorAgregado', '/2/4/17', 0, 7, 0, 0, '', 0, 2),
+(22, '2017-09-17', '00:53 1', 'JugadorAgregado', '/2/4/17', 0, 8, 0, 0, '', 0, 2),
 (23, '2017-09-17', '00:55 1', 'Registro', '/9', 0, 9, 0, 0, '', 0, 0),
 (24, '2017-09-17', '00:57 1', 'Registro', '/10', 0, 10, 0, 0, '', 0, 0),
 (25, '2017-09-17', '00:58 1', 'Registro', '/11', 0, 11, 0, 0, '', 0, 0),
@@ -279,7 +338,7 @@ INSERT INTO `notificacion` (`idNotificacion`, `Fecha`, `Hora`, `Tipo`, `Visto`, 
 (37, '2017-09-17', '01:03 1', 'JugadorAgregado', '/3/13', 0, 12, 0, 0, '', 0, 3),
 (38, '2017-09-17', '01:03 1', 'JugadorAgregado', '/3/13', 0, 13, 0, 0, '', 0, 3),
 (41, '2017-09-17', '01:16 1', 'SolicitarEncuentro', '/3/13', 0, 0, 0, 0, '1/5', 2, 3),
-(42, '2017-09-17', '01:17 1', 'SolicitarEncuentro', '/2/4', 0, 0, 0, 0, '1/5', 3, 2),
+(42, '2017-09-17', '01:17 1', 'SolicitarEncuentro', '/2/4/17', 0, 0, 0, 0, '1/5', 3, 2),
 (43, '2017-09-17', '01:19 1', 'ConfirmarEncuentro', '/1', 0, 0, 0, 1, '5/2/3', 2, 0),
 (44, '2017-09-27', '04:44 1', 'Registro', '', 0, 14, 0, 0, '', 0, 0),
 (45, '2017-09-27', '04:45 1', 'CrearEquipo', '', 14, 0, 0, 0, '', 0, 4),
@@ -287,12 +346,24 @@ INSERT INTO `notificacion` (`idNotificacion`, `Fecha`, `Hora`, `Tipo`, `Visto`, 
 (47, '2017-09-27', '04:54 1', 'JugadorAgregado', '', 0, 13, 0, 0, '', 0, 4),
 (48, '2017-12-24', '11:07 1', 'Registro', '/15', 0, 15, 0, 0, '', 0, 0),
 (49, '2020-05-20', '00:48 0', 'SolicitarEncuentro', '/3', 0, 0, 0, 0, '1/5', 2, 3),
-(50, '2020-05-20', '00:51 0', 'EditarEquipo', '/2/4', 2, 0, 0, 0, '', 2, 2),
+(50, '2020-05-20', '00:51 0', 'EditarEquipo', '/2/4/17', 2, 0, 0, 0, '', 2, 2),
 (51, '2020-05-25', '07:54 1', 'FicharJugador', '', 2, 13, 0, 0, '2', 0, 0),
 (52, '2020-05-25', '07:56 1', 'SolicitarEncuentro', '/3', 0, 0, 0, 0, '1/5', 2, 3),
 (53, '2020-05-25', '10:38 1', 'Registro', '', 0, 16, 0, 0, '', 0, 0),
 (54, '2020-05-25', '10:46 1', 'CrearEquipo', '', 16, 0, 0, 0, '', 0, 5),
-(55, '2020-05-25', '10:51 1', 'FicharJugador', '/3', 16, 3, 0, 0, '5', 0, 0);
+(55, '2020-05-25', '10:51 1', 'FicharJugador', '/3', 16, 3, 0, 0, '5', 0, 0),
+(56, '2020-11-01', '07:35 P.M', 'EncuentroConfirmado', '/2/17', 0, 0, 1, 0, '', 0, 2),
+(57, '2020-11-01', '03:01 1', 'EncuentroConfirmado', '/3', 0, 0, 1, 0, '', 0, 3),
+(58, '2020-11-01', '09:11 1', 'SolicitarEncuentro', '/3', 0, 0, 0, 0, '1/5', 2, 3),
+(59, '2020-11-01', '07:35 P.M', 'EncuentroConfirmado', '/2/17', 0, 0, 1, 0, '', 0, 2),
+(60, '2020-11-01', '09:18 1', 'EncuentroConfirmado', '/3', 0, 0, 1, 0, '', 0, 3),
+(61, '2020-11-01', '07:35 P.M', 'EncuentroConfirmado', '/2/17', 0, 0, 1, 0, '', 0, 2),
+(62, '2020-11-01', '11:09 1', 'EncuentroConfirmado', '/3', 0, 0, 1, 0, '', 0, 3),
+(63, '2020-11-02', '04:41 P.M', 'SolicitarEncuentro', '/2/17', 0, 0, 0, 0, '1/5/2020-11-02 15:00:00|2020-11-02 16:00:00', 3, 2),
+(64, '2020-11-22', '11:22 0', 'Registro', '/17', 0, 17, 0, 0, '', 0, 0),
+(65, '2020-11-22', '11:47 0', 'FicharJugador', '/17', 2, 17, 0, 0, '2', 0, 0),
+(66, '2020-11-22', '11:54 0', 'JugadorAgregado', '/17/2', 0, 17, 0, 0, '', 0, 2),
+(67, '2020-11-22', '00:11 1', 'SolicitarEncuentro', '/3', 0, 0, 0, 0, '1/5/2020-11-22 17:00:00|2020-11-22 18:00:00', 2, 3);
 
 -- --------------------------------------------------------
 
@@ -331,8 +402,9 @@ INSERT INTO `persona` (`idPersona`, `Nombres`, `Apellidos`, `Fecha_Nacimiento`, 
 (13, 'pepe10', 'pepe10', '2017-09-17', '3006420415', 'Femenino', 'pepe10@gmail.com', 'b3eebd72b43b377f8c814c6799723c89c2d134181a9bde7613e2f7c86916522232504510909adcd7be43e84d3b1c2d4c51985bdfc4804633330fc75816d03ff2', 'av.jpg'),
 (14, 'prop', 'prop', '2017-09-17', '3015564516', 'Femenino', 'prop@gmail.com', 'b3eebd72b43b377f8c814c6799723c89c2d134181a9bde7613e2f7c86916522232504510909adcd7be43e84d3b1c2d4c51985bdfc4804633330fc75816d03ff2', 'av.jpg'),
 (15, 'FutPlay', 'FutPlay', '2017-09-27', '3015564516', 'Masculino', 'FutPlay@gmail.com', 'b3eebd72b43b377f8c814c6799723c89c2d134181a9bde7613e2f7c86916522232504510909adcd7be43e84d3b1c2d4c51985bdfc4804633330fc75816d03ff2', 'av.jpg'),
-(16, 'Pepe', 'Tester', '2017-12-24', '', 'Femenino', 'germanguhe@gmail.com', 'cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e', 'https://scontent.xx.fbcdn.net/v/t1.0-1/p320x320/21728199_123774231697183_987818969552926414_n.jpg?oh=31cb615f5158889c92fa02edc65a1bdb&oe=5ACE906B'),
-(17, 'Usuario1', 'Paizoun', '2020-05-25', '3015564533', 'Masculino', 'usuario1@paizoun.com', 'b3eebd72b43b377f8c814c6799723c89c2d134181a9bde7613e2f7c86916522232504510909adcd7be43e84d3b1c2d4c51985bdfc4804633330fc75816d03ff2', 'av5.jpg');
+(16, 'Pepe', 'Tester', '2017-12-24', '', 'Femenino', 'germanguhe@gmail.com', 'cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e', 'av.jpg'),
+(17, 'Usuario1', 'Paizoun', '2020-05-25', '3015564533', 'Masculino', 'usuario1@paizoun.com', 'b3eebd72b43b377f8c814c6799723c89c2d134181a9bde7613e2f7c86916522232504510909adcd7be43e84d3b1c2d4c51985bdfc4804633330fc75816d03ff2', 'av5.jpg'),
+(18, 'Usurio', 'Prueba', '2020-11-22', '3015564557', 'Masculino', 'userPrueba@gmail.com', 'b3eebd72b43b377f8c814c6799723c89c2d134181a9bde7613e2f7c86916522232504510909adcd7be43e84d3b1c2d4c51985bdfc4804633330fc75816d03ff2', 'av.jpg');
 
 -- --------------------------------------------------------
 
@@ -409,6 +481,12 @@ ALTER TABLE `cancha`
   ADD PRIMARY KEY (`idCancha`),
   ADD UNIQUE KEY `idCancha_UNIQUE` (`idCancha`),
   ADD KEY `fk_Cancha_Campo1_idx` (`Campo`);
+
+--
+-- Indices de la tabla `comentario`
+--
+ALTER TABLE `comentario`
+  ADD PRIMARY KEY (`idComentario`);
 
 --
 -- Indices de la tabla `encuentro`
@@ -499,7 +577,7 @@ ALTER TABLE `torneoequipo`
 -- AUTO_INCREMENT de la tabla `calendar`
 --
 ALTER TABLE `calendar`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 --
 -- AUTO_INCREMENT de la tabla `campo`
 --
@@ -511,10 +589,15 @@ ALTER TABLE `campo`
 ALTER TABLE `cancha`
   MODIFY `idCancha` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
+-- AUTO_INCREMENT de la tabla `comentario`
+--
+ALTER TABLE `comentario`
+  MODIFY `idComentario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+--
 -- AUTO_INCREMENT de la tabla `encuentro`
 --
 ALTER TABLE `encuentro`
-  MODIFY `idEncuentro` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `idEncuentro` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 --
 -- AUTO_INCREMENT de la tabla `equipo`
 --
@@ -529,22 +612,22 @@ ALTER TABLE `estadistica`
 -- AUTO_INCREMENT de la tabla `jugador`
 --
 ALTER TABLE `jugador`
-  MODIFY `idJugador` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `idJugador` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 --
 -- AUTO_INCREMENT de la tabla `mensaje`
 --
 ALTER TABLE `mensaje`
-  MODIFY `idMensaje` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `idMensaje` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 --
 -- AUTO_INCREMENT de la tabla `notificacion`
 --
 ALTER TABLE `notificacion`
-  MODIFY `idNotificacion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
+  MODIFY `idNotificacion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=68;
 --
 -- AUTO_INCREMENT de la tabla `persona`
 --
 ALTER TABLE `persona`
-  MODIFY `idPersona` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `idPersona` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 --
 -- AUTO_INCREMENT de la tabla `propietario`
 --
