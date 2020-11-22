@@ -1,8 +1,8 @@
 <!doctype html>
-<html lang="en">
+<html lang="es">
 
-<head>
-    <meta charset="utf-8">
+<head>    
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>PAIZOUN - Registro</title>
     <%@include file="../includes/importsCSS.jsp"%>
 </head>
@@ -196,7 +196,7 @@
                                                     <i class="material-icons">question_answer</i>
                                                 </span>
                                                 <div class="form-group label-floating is-empty">
-                                                    <label class="label-control">¿Que tan buena es tu condicion fisica?
+                                                    <label class="label-control">¿Que tan buena consideras que es tu condicion fisica?
                                                         <small class="error"></small>
                                                     </label>
                                                     <select name="pregunta2" id="pregunta2" class="form-control">
@@ -212,7 +212,7 @@
                                                     <i class="material-icons">question_answer</i>
                                                 </span>
                                                 <div class="form-group label-floating is-empty">
-                                                    <label class="label-control">¿Con que frecuencia practicas este deporte?
+                                                    <label class="label-control">¿Con que frecuencia practicas futbol?
                                                         <small class="error"></small>
                                                     </label>
                                                     <select name="pregunta3" id="pregunta3" class="form-control">

@@ -60,6 +60,10 @@
         <servlet-name>uploadAvatar</servlet-name>
         <servlet-class>Controlador.uploadAvatar</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>comentario</servlet-name>
+        <servlet-class>Controlador.comentario</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>campos</servlet-name>
         <url-pattern>/campos/*</url-pattern>
@@ -119,6 +123,10 @@
     <servlet-mapping>
         <servlet-name>uploadAvatar</servlet-name>
         <url-pattern>/uploadAvatar</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>comentario</servlet-name>
+        <url-pattern>/comentario/*</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

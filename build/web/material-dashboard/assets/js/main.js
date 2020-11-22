@@ -439,15 +439,15 @@ var $validator = $('#frmJugador').validate({
                 email:"Ingresa un correo electronico valido"
             },
             passwordJugador:{
-                required:"Ingresa una contraseña",
+                required:"Ingresa una contrase&ntilde;a",
                 minlength:"Ingresa 8 caracteres como minimo",
                 maxlength:"Ingresa 15 caracteres como maximo",
-                pwcheck1:"La contraseña debe contener una minuscula como minimo",
-                pwcheck2:"La contraseña debe contener un digito como minimo",
-                pwcheck3:"La contraseña debe contener una mayuscula como minimo"
+                pwcheck1:"La contrase&ntilde;a debe contener una minuscula como minimo",
+                pwcheck2:"La contrase&ntilde;a debe contener un digito como minimo",
+                pwcheck3:"La contrase&ntilde;a debe contener una mayuscula como minimo"
             },
             passwordJugadorConfirm:{
-                equalTo:"Ambas contraseñas deben coincidir"
+                equalTo:"Ambas contrase&ntilde;as deben coincidir"
             },
             txtAliasJugador:{
                 required:"Ingresa tu alias",
@@ -507,7 +507,7 @@ var $validator = $('#frmJugador').validate({
                            if(data>"0"){
                                swal({
                                 title:"Advertencia",
-                                text:"¿Estas seguro de que todo tus datos son correctos?",
+                                text:"&iquest;Estas seguro de que todo tus datos son correctos?",
                                 type:"warning",
                                 showCancelButton:true,
                                 closeOnConfirm:false,
@@ -1412,15 +1412,15 @@ function verEquipo(){
                 });
                   $("#contenedorEquipo").html("<div class='col-md-8 col-md-offset-2'>"
                                                     +"<div class='card card-profile'>"
-                                                        +"<div class='card-header card-header-icon' data-background-color='rose'>"
+                                                        +"<div class='card-header card-header-icon' data-background-color='red'>"
                                                             +"<i class='material-icons'>people</i>"
                                                         +"</div><div class='card-content'>"
                                                         +"<div class='clearfix'>"
                                                         +"</div>"
                                                         +"<h6 class='category text-gray'>¿No tienes equipo?</h6>"
                                                         +"<h4 class='card-title'>PAIZOUN te informa</h4>"
-                                                        +"<p class='description'>Hola, por el momento no haces parte de un equipo. Nos gustaria que crearass tu propio equipo con el que podras competir en los torneo, on en su defecto pidele a un amigo que te agregue su equipo :).</p>"
-                                                        +"<button class='btn btn-rose btn-round crearEquipo' data-toggle='modal' data-target='#noticeModal'>Crear equipo</button>"
+                                                        +"<p class='description'>Hola, por el momento no haces parte de un equipo. Nos gustaria que crearas tu propio equipo con el que podras competir en los torneos, o en su defecto pidele a un amigo que te agregue su equipo :).</p>"
+                                                        +"<button class='btn btn-danger btn-round crearEquipo' data-toggle='modal' data-target='#noticeModal'>Crear equipo</button>"
                                                     +"</div>"
                                                 +"</div>"
                                             +"</div>");
@@ -1495,7 +1495,7 @@ function JugadoresVer(){
                                                     +"<h6 class='category text-gray'>¿No hay jugadores?</h6>"
                                                     +"<h4 class='card-title'>PAIZOUN te informa</h4>"
                                                     +"<p class='description'>"
-                                                        +"Hola, por el momento no haces parte de un equipo. Nos gustaria que crearass tu propio equipo con el que podras competir en los torneo, on en su defecto pidele a un amigo que te agregue su equipo :)."
+                                                        +"Hola, por el momento no haces parte de un equipo. Nos gustaria que crearas tu propio equipo con el que podras competir en los torneos, o en su defecto pidele a un amigo que te agregue a su equipo :)."
                                                     +"</p>"
                                                     +"<a href='/FutPlayFinal/material-dashboard/pages/equipo/verEquipo.jsp' class='btn btn-rose btn-round'>Ir a crear equipo</a>"
                                                 +"</div>"
@@ -1748,8 +1748,10 @@ $('.btnCampo').on('click',function(e){
  ////////////////////////////// HACER EL REGISTRO DEL ENCUENTRO ///////////////////////////
  $(".ingresarEncuentro").click(function (){
      
-     /// VEMOS LOS VALORES SELECCIONADOS //////
-    if (tipoSelect == 0 || equipoSelect == 0 || campoSelect == 0) {
+    ///// VEMOS LOS VALORES SELECCIONADOS //////        
+    let fecha = $("#fechaEncuentro").val();
+    let hora = $("#horaEncuentro").val();    
+    if (tipoSelect == 0 || equipoSelect == 0 || campoSelect == 0 || fecha == '' || hora == '') {
         
          $.notify({
             icon: "perm_identity",
@@ -1765,7 +1767,7 @@ $('.btnCampo').on('click',function(e){
         });
     }else{
         
-        $.post("/FutPlayFinal/encuentros/ingresarencuentro",{tipo:tipoSelect,equipo:equipoSelect,campo:campoSelect},function (responseText) {
+        $.post("/FutPlayFinal/encuentros/ingresarencuentro",{tipo:tipoSelect,equipo:equipoSelect,campo:campoSelect, fecha: fecha, hora: hora},function (responseText) {
        
             if (responseText == "1") {
 
@@ -1781,7 +1783,10 @@ $('.btnCampo').on('click',function(e){
                         align: 'right'
                     }
                 });
-
+                
+                setTimeout(function(){ 
+                    window.location = "/FutPlayFinal/material-dashboard/pages/encuentro/verEncuentros.jsp";
+                }, 3000);                
             }else if (responseText == 2) {
 
                 $.notify({
@@ -1833,6 +1838,59 @@ $('.btnCampo').on('click',function(e){
      }).then(function (){
 
         $.post("/FutPlayFinal/encuentros/aceptarencuentro",{equipo:informacion[1],campo:informacion[2],tipo:informacion[3]},function (responseText) {
+           
+            if (responseText == "1") {
+                
+                $.notify({
+                    icon: "perm_identity",
+                    message: "El encuentro ha sido programado con exito."
+
+                },{
+                    type: 'success',
+                    timer: 3000,
+                    placement: {
+                        from: 'bottom',
+                        align: 'right'
+                    }
+                });
+                
+            }else if(responseText == "2"){
+                
+                $.notify({
+                    icon: "perm_identity",
+                    message: "El encuentro no pudo ser programado porque ya tienes un encuentro pendiente con este equipo."
+
+                },{
+                    type: 'danger',
+                    timer: 3000,
+                    placement: {
+                        from: 'bottom',
+                        align: 'right'
+                    }
+                });
+                
+            }
+            
+        });
+         
+     });
+     
+ }
+  ////////////////////////// ACEPTAR LA SOLICITUD PARA UN ENCUENTRO //////////////////////////
+ function aceptarEncuentroEquipoToEquipo(e){
+     
+    var informacion = e.id.split("/");
+
+    swal({
+       title: "Aceptar Encuentro",
+       text: "¿Estas seguro que deseas enfrentarte al equipo "+informacion[0]+"?",
+       type: "warning",
+       showCancelButton: true,
+       closeOnConfirm: false,
+       showLoaderOnConfirm: true
+     }).then(function (){
+
+        $.post("/FutPlayFinal/encuentros/aceptarEncuentroEquipoToEquipo",{equipo:informacion[1],campo:informacion[2],tipo:informacion[3], fechaEncuentro: informacion[4]},function (responseText) {
            
             if (responseText == "1") {
                 
@@ -1957,7 +2015,7 @@ $('.btnCampo').on('click',function(e){
             
             $.notify({
                     icon: "perm_identity",
-                    message: "campos..........................."
+                    message: "campos."
 
                 },{
                     type: 'danger',
@@ -2200,3 +2258,95 @@ function cargarEstadisticas(){
 //    });
 //    
 //});
+/////////////////////////////////////////////// REGISTRAR COMENTARIO //////////////////////////////
+$(".agregarComentario").click(function (e){
+    e.preventDefault();
+    swal({
+        title: "Agregar Comentario",
+        text: "¿Estas seguro de que deseas agregar el comentario?",
+        type: "info",
+        showCancelButton: true,
+        closeOnConfirm: false,
+        showLoaderOnConfirm: true,
+        preConfirm:function (){          
+            setTimeout(function(){                                
+                let contenido = $("#txtContenidoComentario").val();
+                let id = $("#txtIdUsuarioComentado").val();                
+                let tipo = "Jugador";
+
+                $.post("/FutPlayFinal/comentario/crearComentario",{contenido:contenido, tipo: tipo, id: id},function (responseText){
+                    if(responseText == "1"){
+                        swal({
+                            title: "¡Excelente!",
+                            text: "Tu comentario fue agregado.",
+                            type: "success",
+                            showCancelButton: false,
+                            closeOnConfirm: false,
+                            showLoaderOnConfirm: true
+                        }).then(function (){
+                            $("#txtContenidoComentario").val("");
+                            VerComentarios();
+                        });
+                    }else if(responseText == "2"){
+                        $.notify({
+                            icon: "sentiment_very_dissatisfied",
+                            message: "Solo puedes hacer parte de un equipo."
+                        },{
+                            type: 'danger',
+                            timer: 2500,
+                            placement: {
+                                from: 'bottom',
+                                align: 'right'
+                            }
+                        });
+                    }else{
+                        $.notify({
+                            icon: "error",
+                            message: "Ocurrió un error mientras estabamos tu comentario, por favor intentalo mas tarde."
+                        },{
+                            type: 'danger',
+                            timer: 2500,
+                            placement: {
+                                from: 'bottom',
+                                align: 'right'
+                            }
+                        });                     
+                    }                
+                });
+            }, 2000);
+        }        
+    });
+});
+/////////////////////////////////////////////// VER COMENTARIOS //////////////////////////////
+function VerComentarios(){    
+    let id = $("#txtIdUsuarioComentado").val();                
+    let tipo = "Jugador";    
+    $.post("/FutPlayFinal/comentario/getComentarios", {tipo: tipo, id: id}, function (responseText){
+        
+        if (responseText == "0") {
+        
+            $.notify({
+                icon: "perm_identity",
+                message: "Se presento un error al cargar los comentarios."
+
+            },{
+                type: 'warning',
+                timer: 2500,
+                placement: {
+                    from: 'bottom',
+                    align: 'right'
+                }
+            });            
+            
+        }else{                      
+            $("#contenedorComentarios").html(responseText);  
+        }
+        
+    });
+    
+}
+
+$(".btnComentariosCampo").click(function (e){
+   e.preventDefault();
+   alert("gggggg");
+});

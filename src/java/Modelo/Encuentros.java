@@ -31,9 +31,9 @@ public class Encuentros implements Serializable{
     @Column(name = "Estado")
     private String Estado;
     
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "Cancha")
-//    private Canchas Cancha;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "Cancha")
+    private Canchas Cancha;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "Equipo_A")
@@ -46,12 +46,12 @@ public class Encuentros implements Serializable{
     public Encuentros() {
     }
 
-    public Encuentros(String Tipo, Date Fecha_Hora, String Marcador, String Estado, Equipo Equipo_A, Equipo Equipo_B) {
+    public Encuentros(String Tipo, Date Fecha_Hora, String Marcador, String Estado, Canchas Cancha, Equipo Equipo_A, Equipo Equipo_B) {
         this.Tipo = Tipo;
         this.Fecha_Hora = Fecha_Hora;
         this.Marcador = Marcador;
         this.Estado = Estado;
-        //this.Cancha = Cancha;
+        this.Cancha = Cancha;
         this.Equipo_A = Equipo_A;
         this.Equipo_B = Equipo_B;
     }
@@ -96,13 +96,13 @@ public class Encuentros implements Serializable{
         this.Estado = Estado;
     }
 
-//    public Canchas getCancha() {
-//        return Cancha;
-//    }
-//
-//    public void setCancha(Canchas Cancha) {
-//        this.Cancha = Cancha;
-//    }
+    public Canchas getCancha() {
+        return Cancha;
+    }
+
+    public void setCancha(Canchas Cancha) {
+        this.Cancha = Cancha;
+    }
 
     public Equipo getEquipo_A() {
         return Equipo_A;

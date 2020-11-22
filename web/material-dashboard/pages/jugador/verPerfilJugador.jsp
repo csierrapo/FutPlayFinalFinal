@@ -1,4 +1,10 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%
+
+    Jugador objJugadorVisto = (Jugador) request.getSession().getAttribute("JugadorVisto");
+    Persona objPersonaVisto = (Persona) request.getSession().getAttribute("UsuarioVisto");
+    
+%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -109,6 +115,15 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="col-md-8 col-md-offset-2">
+                            <div class="card">
+                                <div class="card-content">
+                                    <input type="text" id="txtIdUsuarioComentado" value="<%=objJugador.getIdJugador()%>" hidden>
+                                    <h3 class="card-title">Comentarios</h3>
+                                    <ul class="list-group" id="contenedorComentarios"></ul>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div><%}%>
@@ -117,10 +132,9 @@
         <%@include file="../includes/importsJS.jsp" %>
         <script>
             $("#nombrepagina").text("Mi perfil");
-            window.onload = function (){
-                
+            window.onload = function (){                
                 CargarNotificaciones();
-                
+                VerComentarios();
             }
         </script>
     </body>

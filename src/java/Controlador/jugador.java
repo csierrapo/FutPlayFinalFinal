@@ -5,6 +5,7 @@
  */
 package Controlador;
 
+import Modelo.Comentario;
 import Modelo.Equipo;
 import Modelo.HibernateUtil;
 import Modelo.Jugador;
@@ -346,29 +347,24 @@ public class jugador extends HttpServlet {
     protected void verJugador(HttpServletRequest request, HttpServletResponse response, String id)
             throws ServletException, IOException {
     
-        try{
-            
+        try{            
             Session sesion = HibernateUtil.getSessionFactory().openSession();
             Query query = sesion.createQuery("FROM Jugador WHERE idJugador="+id+"");
             List<Jugador>ListaJugador = query.list();
             for(Jugador jugador : ListaJugador){
-            
+                
                 Jugador objJugador = new Jugador(jugador.getIdJugador(), jugador.getAlias(), jugador.getPosicion(), jugador.getPierna(), jugador.getDescripcion(), jugador.getRankingSystem(), jugador.getRankingUsers(), jugador.getEstado(), jugador.getCapitan(), jugador.getEquipo(), jugador.getPersona());
                 request.getSession().setAttribute("JugadorVisto", objJugador);
                 
                 Query queryPersona = sesion.createQuery("FROM Persona WHERE idPersona = "+jugador.getPersona()+"");
                 List<Persona>ListaPersona = queryPersona.list();
-                for(Persona persona : ListaPersona){
-                
+                for(Persona persona : ListaPersona){                
                     Persona objPersona = new Persona(persona.getIdPersona(), persona.getNombres(), persona.getApellidos(), persona.getFecha_Nacimiento(), persona.getTelefono(), persona.getGenero(), persona.getCorreo(), persona.getContrasenia(), persona.getAvatar());
-                    request.getSession().setAttribute("UsuarioVisto", objPersona);
-                
-                }
-            
+                    request.getSession().setAttribute("UsuarioVisto", objPersona);                
+                }            
             }
-            response.sendRedirect("/FutPlayFinal/material-dashboard/pages/jugador/verJugador.jsp");
-            sesion.close();
-        
+            sesion.close();                                             
+            response.sendRedirect("/FutPlayFinal/material-dashboard/pages/jugador/verJugador.jsp");                   
         }catch(HibernateException ex){
         
             System.err.println(ex);

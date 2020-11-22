@@ -55,12 +55,12 @@
                                                                 <h6 class="text-primary">Estado: <%=en.getEstado()%></h6>
                                                             </div>
                                                                 <h3 class="card-title"><%=en.getEquipo_A().getNombre()%> <br>VS<br> <%=en.getEquipo_B().getNombre()%></h3>
-                                                            <button class="btn btn-danger btn-round btnFinalizarEncuentro">Finalizar</button>
+                                                                <button class="btn btn-danger btn-round" onclick="openModal(<%=en.getIdEncuantro()%>)">Finalizar</button>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="modal fade" id="modalEncuentro" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+                                            <div class="modal fade" id="modalEncuentro<%=en.getIdEncuantro()%>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
                                                 <div class="modal-dialog modal-notice">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
@@ -72,19 +72,19 @@
                                                                 <div class="col-lg-6">
                                                                     <input hidden value="<%=en.getTipo()%>" id="tipo">
                                                                     <%=en.getEquipo_A().getNombre()%>
-                                                                    <input hidden value="<%=en.getEquipo_A().getIdEquipo()%>" id="idA">
-                                                                    <input class="form-control" name="marcadorA" id="marcadorA" required type="number"/>
+                                                                    <input hidden value="<%=en.getEquipo_A().getIdEquipo()%>" id="idA<%=en.getIdEncuantro()%>">
+                                                                    <input class="form-control" name="marcadorA" id="marcadorA<%=en.getIdEncuantro()%>" required type="number"/>
                                                                 </div>
                                                                 <div class="col-lg-6">
                                                                     <%=en.getEquipo_B().getNombre()%>
-                                                                    <input hidden value="<%=en.getEquipo_A().getIdEquipo()%>" id="idB">
-                                                                    <input class="form-control" name="marcadorB" id="marcadorB" required type="number"/>
+                                                                    <input hidden value="<%=en.getEquipo_A().getIdEquipo()%>" id="idB<%=en.getIdEncuantro()%>">
+                                                                    <input class="form-control" name="marcadorB" id="marcadorB<%=en.getIdEncuantro()%>" required type="number"/>
                                                                 </div>
-                                                                    <input hidden type="text" value="<%=en.getIdEncuantro()%>" id="idEncuentro"/>
+                                                                    <input hidden type="text" value="<%=en.getIdEncuantro()%>" id="idEncuentro<%=en.getIdEncuantro()%>"/>
                                                             </div>
                                                         </div>
                                                         <div class="modal-footer">
-                                                            <button class="btn btn-danger btnFinalizarEnc">Finalizar</button>
+                                                            <button class="btn btn-danger" onclick="finalizarEncuentro(<%=en.getIdEncuantro()%>)">Finalizar</button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -109,6 +109,56 @@
             $(".btnFinalizarEncuentro").on("click",function(){
                 $("#modalEncuentro").modal("show");
             });
+            
+            function openModal(id){                
+                $("#modalEncuentro"+id).modal("show");
+            };
+            
+            function finalizarEncuentro(id){
+                var idA=$("#marcadorA"+id).val();
+                var idB=$("#marcadorB"+id).val();
+                var mA=$("#marcadorA"+id).val();
+                var mB=$("#marcadorB"+id).val();
+                var iden=$("#idEncuentro"+id).val();
+                var tipo = $("#tipo").val();
+                $.ajax({
+                   url:"/FutPlayFinal/encuentros/finalizarEncuentro",
+                   method:"post",
+                   dataType:"json",
+                   data:{iden:iden,mA:mA,mB:mB,idA:idA,idB:idB,tipo:tipo}
+                }).done(function(data){
+                    if(data>"0"){
+                        $.notify({
+                            icon: "mood",
+                            message: "Encuentro finalizado exitosamente"
+                        },{
+                            type: 'success',
+                            timer: 2500,
+                            placement: {
+                                from: 'bottom',
+                                align: 'right'
+                            }
+                        });
+                        $("#marcadorA").val();
+                        $("#marcadorB").val();
+                        window.location = '/FutPlayFinal/material-dashboard/pages/encuentro/encuentrosEspera.jsp';
+                    }
+                    else{
+                        $.notify({
+                            icon: "sentiment_satisfied",
+                            message: "Ocurrio un error!"
+                        },{
+                            type: 'danger',
+                            timer: 2500,
+                            placement: {
+                                from: 'bottom',
+                                align: 'right'
+                            }
+                        });
+                    }
+                });
+            };
+            
             $(".btnFinalizarEnc").on("click",function(){
                 var idA=$("#marcadorA").val();
                 var idB=$("#marcadorB").val();

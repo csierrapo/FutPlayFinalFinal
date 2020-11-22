@@ -53,6 +53,9 @@ public class encuentros extends HttpServlet {
                 case "aceptarencuentro":
                     aceptarEncuentro(request,response);
                     break;
+                case "aceptarEncuentroEquipoToEquipo":
+                    aceptarEncuentroEquipoToEquipo(request,response);
+                    break;
                 case "crearencuentro":
                     crearEncuentro(request,response);
                     break;
@@ -113,6 +116,15 @@ public class encuentros extends HttpServlet {
         listen = q.list();
         return listen;
     }
+    
+    public List<Encuentros> getEncuentrosEsperaJugador(){
+        List<Encuentros> listen = null;        
+        Session s = HibernateUtil.getSessionFactory().openSession();
+        Query q = s.createQuery("FROM Encuentros where Estado != 'Finalizado' AND Fecha_Hora < now()");
+        listen = q.list();        
+        return listen;
+    }
+    
     protected void registrarEncuentro(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
@@ -126,6 +138,25 @@ public class encuentros extends HttpServlet {
             String equipo = request.getParameter("equipo");
             String campo = request.getParameter("campo");
             
+            String Fecha = request.getParameter("fecha");
+            String Hora = request.getParameter("hora");
+            // AJUSTE EN EL FORMATO DE LA FECHA
+            String fechaSplit[] = Fecha.split("/");
+            String fechaFinal = fechaSplit[2]+"-"+fechaSplit[0]+"-"+fechaSplit[1];
+            
+            // AJUSTE EN EL FORMATO DE LA HORA
+            String horaInicial = "";
+            String horaFinal = "";
+            String jornadaSplit[] = Hora.split(" ");
+            String horaSplit[] = jornadaSplit[0].split(":");
+            if (jornadaSplit[1].equals("AM")){
+                horaInicial = String.valueOf(Integer.parseInt(horaSplit[0]));
+                horaFinal = String.valueOf(Integer.parseInt(horaSplit[0]) + 1);
+            }else {
+                horaInicial = String.valueOf(Integer.parseInt(horaSplit[0]) + 12);
+                horaFinal = String.valueOf(Integer.parseInt(horaSplit[0]) + 13);                
+            }
+            
             
             Session sesion = HibernateUtil.getSessionFactory().openSession();
             
@@ -136,24 +167,19 @@ public class encuentros extends HttpServlet {
                 Query query = sesion.createQuery("FROM Jugador WHERE Equipo = "+equipo+"");
                 List<Jugador>listaJugador = query.list();
 
-
                 if (listaJugador.size() >= tipo) {
                     String horaActual = new Notificacion().getHoraActual();
-                    Notificacion objNotificacion = new Notificacion(new Date(), horaActual, "SolicitarEncuentro", "", 0, 0, 0, 0, campo+"/"+String.valueOf(tipo), Integer.parseInt(String.valueOf(objJugador.getEquipo())), Integer.parseInt(equipo));
+                    Notificacion objNotificacion = new Notificacion(new Date(), horaActual, "SolicitarEncuentro", "", 0, 0, 0, 0, campo+"/"+String.valueOf(tipo)+"/"+fechaFinal +" "+ horaInicial+":"+horaSplit[1]+":00"+"|"+fechaFinal +" "+ horaFinal+":"+horaSplit[1]+":00", Integer.parseInt(String.valueOf(objJugador.getEquipo())), Integer.parseInt(equipo));
+                    System.out.println(objNotificacion.getDatosAdicionales());
                     sesion.beginTransaction();
                     sesion.save(objNotificacion);
                     sesion.getTransaction().commit();
 
                     response.getWriter().write("1");
-
                 }else{
-
                     response.getWriter().write("2");
-
-                }
-                
-            }else{
-            
+                }                
+            }else{            
                 response.getWriter().write("3");
             }
             
@@ -210,6 +236,85 @@ public class encuentros extends HttpServlet {
         }
         
     }
+    protected void aceptarEncuentroEquipoToEquipo(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try{
+            
+            Jugador objJugador = (Jugador) request.getSession().getAttribute("JugadorIngresado");
+        
+            String equipo = request.getParameter("equipo");
+            String campo = request.getParameter("campo");
+            String tipo = request.getParameter("tipo");
+            String fechaEncuentro = request.getParameter("fechaEncuentro");
+            
+            String fechaSplit[] = fechaEncuentro.split("\\|"); 
+            
+            Session sesion = HibernateUtil.getSessionFactory().openSession();
+            
+            Query queryEncuentro = sesion.createQuery("FROM Encuentros WHERE (Equipo_A = "+equipo+" or Equipo_A = "+objJugador.getEquipo()+") AND (Equipo_B = "+equipo+" or Equipo_B = "+objJugador.getEquipo()+") AND Estado = 'En espera'");            
+            List<Encuentros>listaEncuentro = queryEncuentro.list();
+            if (listaEncuentro.size() == 0) {
+            
+                Query queryCampo = sesion.createQuery("FROM Campos WHERE idCampo = "+campo+"");
+                List<Campos>listaCampo = queryCampo.list();
+                for (Campos campos : listaCampo) {                
+                    
+                    Equipo objEquipo1 = objJugador.getEquipo();                    
+                    Equipo objequipo2 = new Equipo();
+                    objequipo2.setIdEquipo(Integer.parseInt(equipo));
+
+                    /*AJUSTAR PARA QUE EL USUARIO SELECCIONE LA CANCHA EN LA QUE SE JUEGA EL ENCUENTRO*/
+                    Canchas objCanchas = new Canchas();
+                    objCanchas.setIdCancha(1);
+
+                    Encuentros objEncuentro = new Encuentros(tipo, new Date(), "", "En espera", objCanchas, objEquipo1, objequipo2);
+                    Session sesionEncuentro = HibernateUtil.getSessionFactory().openSession();
+                    sesionEncuentro.beginTransaction();
+                    sesionEncuentro.save(objEncuentro);
+                    sesionEncuentro.getTransaction().commit();
+                    sesionEncuentro.close();
+                    
+                    Session sesionEncuentro2 = HibernateUtil.getSessionFactory().openSession();                
+                    Encuentros objEncuentro2 = (Encuentros) sesionEncuentro2.createQuery("FROM Encuentros ORDER BY idEncuantro DESC").setMaxResults(1).uniqueResult();
+                    sesionEncuentro2.close();
+                    
+                    
+                    /*CREAR EL REGISTRO DEL CALENDAR PARA EL ENCUENTRO*/
+                    Campos objCampo = new Campos();
+                    objCampo.setIdCampo(campos.getIdCampo());
+                                                                                                   
+                    Calendar objCalendar = new Calendar();                
+                    objCalendar.setTitle("Encuentro");
+                    objCalendar.setStart(fechaSplit[0]);
+                    objCalendar.setEnd(fechaSplit[1]);
+                    objCalendar.setColor("rgb(244, 67, 54)");
+                    objCalendar.setCampo(objCampo);
+                    objCalendar.setEncuentro(objEncuentro2);
+                    Session sesionCalendar = HibernateUtil.getSessionFactory().openSession();
+                    sesionCalendar.beginTransaction();
+                    sesionCalendar.save(objCalendar);
+                    sesionCalendar.getTransaction().commit();
+                    sesionCalendar.close();
+                    
+                    /*CREAR UN NUEVO TIPO DE NOTIFICACION PARA EL CASO EN QUE EL ENCUENTRO SE ACEPTA ENTRE LOS EQUIPOS*/
+
+                    response.getWriter().write("1");
+                }
+
+            }else{
+            
+                response.getWriter().write("2");
+            }
+            
+            sesion.close();
+            
+        }catch(HibernateException ex){
+            System.err.println(ex);
+        }catch(Exception ex){
+            System.err.println(ex);
+        }
+        
+    }
     protected void crearEncuentro(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
@@ -219,13 +324,28 @@ public class encuentros extends HttpServlet {
             int notificacion1 = Integer.parseInt(request.getParameter("idNotificacion"));
             String Fecha = request.getParameter("fecha");
             String Hora = request.getParameter("hora");
+             
+            // AJUSTE EN EL FORMATO DE LA FECHA
+            String fechaSplit[] = Fecha.split("/");
+            String fechaFinal = fechaSplit[2]+"-"+fechaSplit[0]+"-"+fechaSplit[1];
             
+            // AJUSTE EN EL FORMATO DE LA HORA
+            String horaInicial = "";
+            String horaFinal = "";
+            String jornadaSplit[] = Hora.split(" ");
+            String horaSplit[] = jornadaSplit[0].split(":");
+            if (jornadaSplit[1].equals("AM")){
+                horaInicial = String.valueOf(Integer.parseInt(horaSplit[0]));
+                horaFinal = String.valueOf(Integer.parseInt(horaSplit[0]) + 1);
+            }else {
+                horaInicial = String.valueOf(Integer.parseInt(horaSplit[0]) + 12);
+                horaFinal = String.valueOf(Integer.parseInt(horaSplit[0]) + 13);                
+            }
+                      
             String horaf[] = Hora.split(":");
             int hora2 = Integer.parseInt(horaf[0]);
             
-            int fechaFinalFinal = hora2 + 1;
-            
-            System.out.println(Fecha + "   --> " + fechaFinalFinal);
+            int fechaFinalFinal = hora2 + 1;                        
             
             Session sesion = HibernateUtil.getSessionFactory().openSession();
             Query query = sesion.createQuery("FROM Notificacion WHERE idNotificacion = "+notificacion1+"");
@@ -234,17 +354,7 @@ public class encuentros extends HttpServlet {
                 
                 System.out.println("-----------------------> ESTOY EN EL FOREACH EN EL CONTROLADOR ENCUENTROS");
                 
-                String datos[] = notificacion.getDatosAdicionales().split("/");
-                /*Calendar objCalendar = new Calendar();
-                objCalendar.setTitle("Encuentro");
-                objCalendar.setStart(Hora);
-                objCalendar.setEnd(Hora);
-                objCalendar.setColor("");*/
-                
-                //Canchas objCancha = new Canchas();
-                //objCancha.setIdCancha(0);
-                
-                //System.out.println(""+objCancha);
+                String datos[] = notificacion.getDatosAdicionales().split("/");             
                 
                 Equipo objEquipo1 = new Equipo();
                 objEquipo1.setIdEquipo(Integer.parseInt(datos[1]));
@@ -254,11 +364,36 @@ public class encuentros extends HttpServlet {
                 
                 System.out.println("------------------> CRANDO EL ENCUENTRO.......||.|..|.|.|.|..|.|");
                 
-                Encuentros objEncuentro = new Encuentros(datos[0], new Date(), "", "En espera", objEquipo1, objequipo2);
+                /*AJUSTAR PARA QUE EL USUARIO SELECCIONE LA CANCHA EN LA QUE SE JUEGA EL ENCUENTRO*/
+                Canchas objCanchas = new Canchas();
+                objCanchas.setIdCancha(1);
+                
+                Encuentros objEncuentro = new Encuentros(datos[0], new Date(), "", "En espera", objCanchas, objEquipo1, objequipo2);
                 sesion.beginTransaction();
                 sesion.save(objEncuentro);
                 sesion.getTransaction().commit();
+
+                Session sesionEncuentro = HibernateUtil.getSessionFactory().openSession();                
+                Encuentros objEncuentro2 = (Encuentros) sesionEncuentro.createQuery("FROM Encuentros ORDER BY idEncuantro DESC").setMaxResults(1).uniqueResult();
+                sesionEncuentro.close();
                 
+                
+                /*CREAR EL REGISTRO DEL CALENDAR PARA EL ENCUENTRO*/
+                Campos objCampo = new Campos();
+                objCampo.setIdCampo(1);                
+                
+                Calendar objCalendar = new Calendar();                
+                objCalendar.setTitle("Encuentro");
+                objCalendar.setStart(fechaFinal +" "+ horaInicial+":"+horaSplit[1]+":00");
+                objCalendar.setEnd(fechaFinal +" "+ horaFinal+":"+horaSplit[1]+":00");
+                objCalendar.setColor("rgb(244, 67, 54)");
+                objCalendar.setCampo(objCampo);
+                objCalendar.setEncuentro(objEncuentro2);
+                Session sesionCalendar = HibernateUtil.getSessionFactory().openSession();
+                sesionCalendar.beginTransaction();
+                sesionCalendar.save(objCalendar);
+                sesionCalendar.getTransaction().commit();
+                sesionCalendar.close();
                 
                 
                 System.out.println("---------------------> GENERANDO LAS NOTIFICACIONES °°°°°°°°°°°°°°°°°°°°°°°°°°|");
@@ -301,7 +436,7 @@ public class encuentros extends HttpServlet {
             if (!"1".equals(objJugador.getEquipo().toString())) {
                 
                 Session sesion = HibernateUtil.getSessionFactory().openSession();
-                Query queryEncuentros = sesion.createQuery("FROM Encuentros WHERE Equipo_A="+objJugador.getEquipo()+" OR Equipo_B="+objJugador.getEquipo()+" AND Marcador != '' OR Marcador != null AND Estado='Finalizado'");
+                Query queryEncuentros = sesion.createQuery("FROM Encuentros WHERE (Equipo_A="+objJugador.getEquipo()+" OR Equipo_B="+objJugador.getEquipo()+") AND Marcador != '' AND Estado='Finalizado'");
                 List<Encuentros>listaEncuentros = queryEncuentros.list();
                 if (listaEncuentros.size() > 0) {
                 
@@ -332,7 +467,7 @@ public class encuentros extends HttpServlet {
 
                                     estado = "EMPATE";
                                 }
-
+                                response.setCharacterEncoding("UTF-8");
                                 response.getWriter().write("<div class='col-lg-4'>"
                                                         +"<div class='card card-pricing card-raised'>"
                                                             +"<div class='content'>"
@@ -380,7 +515,7 @@ public class encuentros extends HttpServlet {
             Jugador objJugador = (Jugador) request.getSession().getAttribute("JugadorIngresado");
         
             Session sesion = HibernateUtil.getSessionFactory().openSession();
-            Query encuentrosEquipo = sesion.createQuery("FROM Encuentros WHERE Equipo_A = "+objJugador.getEquipo()+" OR Equipo_B = "+objJugador.getEquipo()+" AND Estado = 'Finalizado'");
+            Query encuentrosEquipo = sesion.createQuery("FROM Encuentros WHERE (Equipo_A = "+objJugador.getEquipo()+" OR Equipo_B = "+objJugador.getEquipo()+") AND Estado = 'Finalizado'");
             List<Encuentros>listaEncuentros = encuentrosEquipo.list();
             
             for(Encuentros encuentro : listaEncuentros){

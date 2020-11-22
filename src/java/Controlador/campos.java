@@ -57,9 +57,27 @@ public class campos extends HttpServlet {
     protected void registrarCampo(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try{
-            Propietario prp = (Propietario)request.getSession().getAttribute("PropietarioIngresado");
             Propietario prop = new Propietario();
-            prop.setIdPropietario(prp.getIdPropietario());
+            /*validamos si la variable de session del propietario es valida, de lo contrario tomamos un propietario random y le asignamos el id*/
+            if (!request.getSession().getAttribute("PropietarioIngresado").equals("")) {
+                System.out.println("Ok propietario");
+                Propietario prp = (Propietario)request.getSession().getAttribute("PropietarioIngresado");
+                prop.setIdPropietario(prp.getIdPropietario());                                
+            }else {
+                System.out.println("Sin propietario, buscando uno...");
+                Session sesion = HibernateUtil.getSessionFactory().openSession();              
+                Query queryy = sesion.createQuery("FROM Propietario ORDER BY idPropietario ASC");
+                queryy.setMaxResults(1);              
+                List<Propietario> ListPropietario = queryy.list();
+                if (ListPropietario.size() > 0) {
+                    for(Propietario propietario : ListPropietario){                       
+                        prop.setIdPropietario(propietario.getIdPropietario());
+                    }
+                }
+                sesion.close();               
+            }
+            
+            
             String nombrecampo = request.getParameter("nombrecampo");
             String direccioncampo = request.getParameter("direccioncampo");
             String ubicacion = request.getParameter("ubicacion");
@@ -238,6 +256,9 @@ public class campos extends HttpServlet {
                                                                 +"</div>"     
                                                                     +"<button class='btn btn-primary btn-simple btnMapCampo' rel='tooltip' data-placement='bottom' title='Ubicacion en Google maps' value="+campos.getUbicacion()+">"
                                                                         +"<i class='material-icons' style='font-size: 25px;'>location_on</i>"
+                                                                    +"</button>"
+                                                                    +"<button class='btn btn-success btn-simple btnComentariosCampo' rel='tooltip' data-placement='bottom' title='Comentarios' value="+String.valueOf(campos.getIdCampo())+">"
+                                                                        +"<i class='material-icons' style='font-size: 25px;'>comment_bank</i>"
                                                                     +"</button>"
                                                                         +"<p class='card-description'>"+campos.getDireccion()+"</p>"
                                                                         +"<p><i class='material-icons' style='font-size:20px;'>face</i> Propietario: "+Prop.getPersona().getNombres() +" "+Prop.getPersona().getApellidos()+"</p>"    

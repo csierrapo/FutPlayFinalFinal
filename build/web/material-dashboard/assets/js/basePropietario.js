@@ -763,7 +763,7 @@ $(document).ready(function(){
                 });
             }
         });
-    }); 
+    });             
 ////////////////////////////Funcion para mostrar canchas para cado campo////////////////////////////
     $(".btnAdminCancha").on("click",function(e){
        e.preventDefault();

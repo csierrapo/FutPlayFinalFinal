@@ -4,6 +4,7 @@ import Modelo.Campos;
 import Modelo.Canchas;
 import Modelo.Calendar;
 import Modelo.HibernateUtil;
+import Modelo.Jugador;
 import Modelo.calendarAdapter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -57,6 +58,9 @@ public class canchas extends HttpServlet {
                     break;
                 case "getAll":
                     getAll(request,response);
+                    break;
+                case "getJSONEncuentrosJugador":
+                        getJSONEncuentrosJugador(request,response);
                     break;
             }
         }
@@ -169,6 +173,21 @@ public class canchas extends HttpServlet {
         Gson gson = gsonBuilder.registerTypeAdapter(Calendar.class, new calendarAdapter()).create();
         Session s = HibernateUtil.getSessionFactory().openSession();
         Query q = s.createQuery("FROM Calendar WHERE campo ="+campo+"");
+        List<Calendar> listEn = q.list();
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        response.getWriter().write(gson.toJson(listEn));
+    }
+    
+    protected void getJSONEncuentrosJugador(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        Gson gson = gsonBuilder.registerTypeAdapter(Calendar.class, new calendarAdapter()).create();
+        Session s = HibernateUtil.getSessionFactory().openSession();
+        
+        /*AGREGAR LAS VALIDACIONES DEL EQUIPO Y DEL ESTADO DEL ENCUENTRO*/        
+        Jugador objJugador = (Jugador) request.getSession().getAttribute("JugadorIngresado");        
+        Query q = s.createQuery("SELECT c FROM Calendar c LEFT JOIN c.encuentro e WHERE e.idEncuantro IS NOT NULL AND (e.Equipo_A = "+objJugador.getEquipo().getIdEquipo()+" OR e.Equipo_B = "+objJugador.getEquipo().getIdEquipo()+")");
         List<Calendar> listEn = q.list();
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");

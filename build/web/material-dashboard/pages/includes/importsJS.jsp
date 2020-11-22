@@ -40,7 +40,8 @@
 <!-- Material Dashboard DEMO methods, don't include it in your project! -->
 <script src="../../assets/js/demo.js"></script>
 <!--Gmaps API-->
-<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAAZnaZBXLqNBRXjd-82km_NO7GUItyKek"></script>  
+<!--<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCdedsTe56BJioqRJ1ULbuv_tMFj2Hdpkw"></script>-->
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyApWAwTHr8qVqWNetSZsyvELwmMhhDpscs"></script>
 
 <script type="text/javascript">
     $().ready(function() {

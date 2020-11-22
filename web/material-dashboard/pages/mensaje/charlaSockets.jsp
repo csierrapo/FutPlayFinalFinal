@@ -28,7 +28,7 @@
                                     <p class="description">
                                         Hola, por el momento no haces parte de un equipo. Nos gustaria que crearass tu propio equipo con el que podras competir en los torneo, on en su defecto pidele a un amigo que te agregue su equipo :).
                                     </p>
-                                    <a href="/FutPlayFinal/material-dashboard/pages/equipo/verEquipo.jsp" class="btn btn-rose btn-round">Ir a crear equipo</a>
+                                    <a href="/FutPlayFinal/material-dashboard/pages/equipo/verEquipo.jsp" class="btn btn-danger btn-round">Ir a crear equipo</a>
                                 </div>
                             </div>
                         </div>
@@ -74,6 +74,7 @@
         <script>
             $("#charla").addClass('active');
             $("#nombrepagina").text("Charla tecnica");
+            CargarNotificaciones();
            
             var contenido;
             var mensaje;

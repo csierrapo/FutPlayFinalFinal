@@ -57,5 +57,6 @@ Contributor(s):
     <mapping class="Modelo.Propietario"/>
     <mapping class="Modelo.Torneo"/>
     <mapping class="Modelo.Calendar"/>
+    <mapping class="Modelo.Comentario"/>
   </session-factory>
 </hibernate-configuration>

@@ -175,8 +175,7 @@ public class Notificacion implements Serializable{
         minutos = calendario.get(java.util.Calendar.MINUTE);
         estado = calendario.get(java.util.Calendar.AM_PM);
 
-        if (hora < 10) {
-            System.out.println("condicion hora");
+        if (hora < 10) {            
             horaFinal = "0"+String.valueOf(hora);
         }else{
             horaFinal = String.valueOf(hora);
@@ -185,11 +184,10 @@ public class Notificacion implements Serializable{
             minutosFinal = "0"+String.valueOf(minutos);
         }else{
             minutosFinal = String.valueOf(minutos);
-        }
-        System.out.println(horaFinal);
+        }        
         String HoraActual = horaFinal+":"+minutosFinal+" "+String.valueOf(estado);
         return HoraActual;
-    
-    }
+        
+        }
 
 }

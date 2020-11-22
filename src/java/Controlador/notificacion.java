@@ -212,18 +212,18 @@ public class notificacion extends HttpServlet {
                     
                     for(Notificacion notificacion : ListaNotificacion){
 
-                        System.out.println("TIPO DE NOTIFICAICON ------>    "+notificacion.getTipo());
+                        //System.out.println("TIPO DE NOTIFICAICON ------>    "+notificacion.getTipo());
 
 
-                        System.out.println("EQUIPO JUGADOR NOTIFICACIONES------------------>" + objJugador.getEquipo());
-                        System.out.println(notificacion.getTipo());
+                        //System.out.println("EQUIPO JUGADOR NOTIFICACIONES------------------>" + objJugador.getEquipo());
+                        //System.out.println(notificacion.getTipo());
                         String href = "", contenido = "", icono = "", color="", onclick="";
 
                         Query queryNotificacion = sesion.createQuery("FROM Jugador WHERE idJugador="+notificacion.getJugadorEnvia()+"");
                         List<Jugador>ListaJugador = queryNotificacion.list();
                         if (ListaJugador.size() > 0) {
 
-                            System.out.println("NOTIFICACION DEL JUGADOR QUE ENVIA --------)");
+                            //System.out.println("NOTIFICACION DEL JUGADOR QUE ENVIA --------)");
 
                             for(Jugador jugador : ListaJugador){
                                 switch (notificacion.getTipo()){
@@ -316,7 +316,7 @@ public class notificacion extends HttpServlet {
                             List<Jugador>ListaJugadorr = queryJugador.list();
                             for(Jugador jugador : ListaJugadorr){
 
-                                System.out.println("JUGADOR QUE RECIBE °°°°°°°°°°°°");
+                                //System.out.println("JUGADOR QUE RECIBE °°°°°°°°°°°°");
 
                                 switch (notificacion.getTipo()){
 
@@ -324,7 +324,7 @@ public class notificacion extends HttpServlet {
 
                                             icono = "group";
                                             href="#";
-                                            contenido="¡PAIZOUN te da la bienvenida!";
+                                            contenido="PAIZOUN te da la bienvenida!";
                                             color="00BCD4";
                                         break;
 
@@ -418,9 +418,9 @@ public class notificacion extends HttpServlet {
                                     Zona = "A.M";
                                 }
                                 String fecha [] = notificacion.getFecha().toString().split(" ");
-                                String contenidoNot[] = notificacion.getDatosAdicionales().split("/");
-                                
-                                response.getWriter().write("<a href='#' onclick='aceptarEncuentro(this)' id='"+equipo.getNombre()+"/"+notificacion.getEquipoEnvia()+"/"+notificacion.getDatosAdicionales()+"' class='NotificationP'>"
+                                String contenidoNot[] = notificacion.getDatosAdicionales().split("/");                                
+                                if(contenidoNot.length == 2){
+                                    response.getWriter().write("<a href='#' onclick='aceptarEncuentro(this)' id='"+equipo.getNombre()+"/"+notificacion.getEquipoEnvia()+"/"+notificacion.getDatosAdicionales()+"' class='NotificationP'>"
                                                                 +"<div class='Notification-iconP'>"
                                                                     +"<i class='material-icons' style='background-color: #FF9800; font-size: 25px;'>flash_on</i>"
                                                                 +"</div>"
@@ -431,11 +431,29 @@ public class notificacion extends HttpServlet {
                                                                     +"</p>"
                                                                 +"</div>"
                                                            +"</a>");
+                                }else {                                    
+                                    String fechaEncuentro[] = contenidoNot[2].split("\\|");                                                                        
+                                    response.getWriter().write("<a href='#' onclick='aceptarEncuentroEquipoToEquipo(this)' id='"+equipo.getNombre()+"/"+notificacion.getEquipoEnvia()+"/"+notificacion.getDatosAdicionales()+"/"+contenidoNot[2]+"' class='NotificationP'>"
+                                                                +"<div class='Notification-iconP'>"
+                                                                    +"<i class='material-icons' style='background-color: #FF9800; font-size: 25px;'>flash_on</i>"
+                                                                +"</div>"
+                                                                +"<div class='Notification-textP' style='margin-left: 80px;'>"
+                                                                    +"<p style='padding-top: 10px;'>"
+                                                                        +"<strong class='description'>El equipo "+equipo.getNombre()+" quiere participar en un encuentro contra tu equipo el dia "+fechaEncuentro[0]+".</strong><br>"
+                                                                        +"<small>"+fecha[0]+" "+Hora[0]+" "+Zona+"</small>"    
+                                                                    +"</p>"
+                                                                +"</div>"
+                                                           +"</a>");
+                                }
+                                
+                                
+                                
+                                
                                 
                             }
                         }else if (notificacion.getTipo().equals("EncuentroConfirmado")) {
                             
-                            System.out.println("MIRANDO LA NOTIFICACION ENCUENTRO CONFIRMADO");
+                            //System.out.println("MIRANDO LA NOTIFICACION ENCUENTRO CONFIRMADO");
                             
                             Query queryPropietario = sesion.createQuery("FROM Propietario WHERE idPropietario = "+notificacion.getPropietarioEnvia()+"");
                             List<Propietario>listaPropietario = queryPropietario.list();

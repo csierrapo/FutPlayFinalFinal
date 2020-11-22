@@ -1,3 +1,5 @@
+<%@page import="Modelo.Encuentros"%>
+<%@page import="Controlador.encuentros"%>
 <%@page import="Modelo.Campos"%>
 <%@page import="Controlador.campos"%>
 <%@page import="Modelo.Equipo"%>
@@ -5,7 +7,7 @@
 <%@page import="Controlador.equipo"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<html>
+<html lang="es">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>PAIZOUN - Ingresar Encuentro</title>
@@ -33,17 +35,17 @@
                                     <p class="description">
                                         Hola, por el momento no haces parte de un equipo. Nos gustaria que crearass tu propio equipo con el que podras competir en los torneo, on en su defecto pidele a un amigo que te agregue su equipo :).
                                     </p>
-                                    <a href="/FutPlayFinal/material-dashboard/pages/equipo/verEquipo.jsp" class="btn btn-rose btn-round">Ir a crear equipo</a>
+                                    <a href="/FutPlayFinal/material-dashboard/pages/equipo/verEquipo.jsp" class="btn btn-danger btn-round">Ir a crear equipo</a>
                                 </div>
                             </div>
                         </div>
-                        <p id="noEncuentros">no</p>
+                        <p id="noEncuentros" hidden="">no</p>
                         <%}else{%>
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="card card-product">
                                         <div class="card-image" data-header-animation="true">
-                                            <img src="../../assets/img/jugadorimg/encuentro-iloveimg-cropped.jpg" class="responsive-img">
+                                            <img src="../../assets/img/jugadorimg/football-1145963_1920.jpg" class="responsive-img">
                                             <!--<span class="card-title">Los mejores campos</span>-->
                                             <div class="ripple-container"></div>
                                         </div>
@@ -59,6 +61,9 @@
                                                 </a>
 
                                             </div>
+                                            
+                                            
+                                            
                                             <div class="card-description">
                                                 <div class="row">
                                                     <div class="col-md-12">
@@ -71,12 +76,78 @@
                                                             <p>En PAIZOUN queremos que compitas con los mejores, por eso hemos creado una estadistica 
                                                             donde puedes ver mes a mes el desempeño que mantiene tu equipo en el campo de juego. 
                                                             Por cada encuentro ganado, perdido o empatado el nivel futbolistico subira o bajara segun los resultados 
-                                                            obtenidos en los encuentros, la meta es llebar a tu equipo al rendimiento maximo.</p>
+                                                            obtenidos en los encuentros, la meta es llevar a tu equipo al rendimiento maximo.</p>
                                                         </div>
                                                     </div>
                                                 </div>
+                                                
+                                                
                                                 <div class="card-title">
-                                                    <h4>Encuentros realizados</h4>
+                                                    <h3>Encuentros pendientes</h3>
+                                                </div>
+                                                <div class="row">
+                                                    <%
+                                                        encuentros enc = new encuentros();
+                                                        List<Encuentros> listEncuentros = enc.getEncuentrosEsperaJugador();
+                                                    %>
+                                                    
+                                                    <%if(listEncuentros.size() == 0){%>
+                                                        <p>No tienes encuentros pendientes.</p>
+                                                    <%}%>
+                                                    
+                                                    <%for (Encuentros en: listEncuentros){%>
+                                                        <div class="card-description" id="EncuentrosVer">
+                                                            <div class="col-lg-4">
+                                                                <div class="card card-pricing card-raised">
+                                                                    <div class="content">
+                                                                        <h6 class="category">Futbol <%=en.getTipo()%></h6>                                                                        
+                                                                        <h4 class="card-title"><%=en.getEquipo_A().getNombre()%> <strong>VS</strong> <%=en.getEquipo_B().getNombre()%></h4>
+                                                                        <button class="btn btn-danger btn-round" onclick="openModal(<%=en.getIdEncuantro()%>)">Finalizar</button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal fade" id="modalEncuentro<%=en.getIdEncuantro()%>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+                                                            <div class="modal-dialog modal-notice">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="material-icons">clear</i></button>
+                                                                        <h5 class="modal-title" id="myModalLabel">Marcador Final</h5>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        <div class="row">
+                                                                            <div class="col-lg-6">
+                                                                                <input hidden value="<%=en.getTipo()%>" id="tipo">
+                                                                                <%=en.getEquipo_A().getNombre()%>
+                                                                                <input hidden value="<%=en.getEquipo_A().getIdEquipo()%>" id="idA<%=en.getIdEncuantro()%>">
+                                                                                <input class="form-control" name="marcadorA" id="marcadorA<%=en.getIdEncuantro()%>" required type="number"/>
+                                                                            </div>
+                                                                            <div class="col-lg-6">
+                                                                                <%=en.getEquipo_B().getNombre()%>
+                                                                                <input hidden value="<%=en.getEquipo_A().getIdEquipo()%>" id="idB<%=en.getIdEncuantro()%>">
+                                                                                <input class="form-control" name="marcadorB" id="marcadorB<%=en.getIdEncuantro()%>" required type="number"/>
+                                                                            </div>
+                                                                                <input hidden type="text" value="<%=en.getIdEncuantro()%>" id="idEncuentro<%=en.getIdEncuantro()%>"/>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <button class="btn btn-danger" onclick="finalizarEncuentro(<%=en.getIdEncuantro()%>)">Finalizar</button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    <%}%>
+                                        
+                                        
+                                                </div>
+                                            </div>
+                                            
+                                            
+                                            
+                                            
+                                            <div class="card-description">                                                
+                                                <div class="card-title">
+                                                    <h3>Encuentros finalizados</h3>
                                                 </div>
                                                 <div class="row" id="encuentrosRealizados">
                                                     <!--<div class="col-lg-4">
@@ -124,6 +195,7 @@
         <%@include file="../includes/importsJS.jsp" %>
         <script>
             $("#encuentro").addClass('active');
+            $("#encuentrosOptions").addClass("in");
             CargarNotificaciones();
             mostrarEncuentrosRealizados();
             cargarEstadisticas();
@@ -143,6 +215,99 @@
                 });
             }
             
+            
+            function openModal(id){                
+                $("#modalEncuentro"+id).modal("show");
+            };
+            
+            function finalizarEncuentro(id){
+                var idA=$("#marcadorA"+id).val();
+                var idB=$("#marcadorB"+id).val();
+                var mA=$("#marcadorA"+id).val();
+                var mB=$("#marcadorB"+id).val();
+                var iden=$("#idEncuentro"+id).val();
+                var tipo = $("#tipo").val();
+                $.ajax({
+                   url:"/FutPlayFinal/encuentros/finalizarEncuentro",
+                   method:"post",
+                   dataType:"json",
+                   data:{iden:iden,mA:mA,mB:mB,idA:idA,idB:idB,tipo:tipo}
+                }).done(function(data){
+                    if(data>"0"){
+                        $.notify({
+                            icon: "mood",
+                            message: "Encuentro finalizado exitosamente"
+                        },{
+                            type: 'success',
+                            timer: 2500,
+                            placement: {
+                                from: 'bottom',
+                                align: 'right'
+                            }
+                        });
+                        $("#marcadorA").val();
+                        $("#marcadorB").val();
+                        window.location = '/FutPlayFinal/material-dashboard/pages/encuentro/verEncuentros.jsp';
+                    }
+                    else{
+                        $.notify({
+                            icon: "sentiment_satisfied",
+                            message: "Ocurrio un error!"
+                        },{
+                            type: 'danger',
+                            timer: 2500,
+                            placement: {
+                                from: 'bottom',
+                                align: 'right'
+                            }
+                        });
+                    }
+                });
+            };
+            
+            $(".btnFinalizarEnc").on("click",function(){
+                var idA=$("#marcadorA").val();
+                var idB=$("#marcadorB").val();
+                var mA=$("#marcadorA").val();
+                var mB=$("#marcadorB").val();
+                var iden=$("#idEncuentro").val();
+                var tipo = $("#tipo").val();
+                $.ajax({
+                   url:"/FutPlayFinal/encuentros/finalizarEncuentro",
+                   method:"post",
+                   dataType:"json",
+                   data:{iden:iden,mA:mA,mB:mB,idA:idA,idB:idB,tipo:tipo}
+                }).done(function(data){
+                    if(data>"0"){
+                        $.notify({
+                            icon: "mood",
+                            message: "Encuentro finalizado exitosamente"
+                        },{
+                            type: 'success',
+                            timer: 2500,
+                            placement: {
+                                from: 'bottom',
+                                align: 'right'
+                            }
+                        });
+                        $("#marcadorA").val();
+                        $("#marcadorB").val();
+                    }
+                    else{
+                        $.notify({
+                            icon: "sentiment_satisfied",
+                            message: "Ocurrio un error!"
+                        },{
+                            type: 'danger',
+                            timer: 2500,
+                            placement: {
+                                from: 'bottom',
+                                align: 'right'
+                            }
+                        });
+                    }
+                });
+            });
         </script>
     </body>
 </html>

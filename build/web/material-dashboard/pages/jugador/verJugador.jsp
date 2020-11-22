@@ -1,3 +1,5 @@
+<%@page import="Modelo.Comentario"%>
+<%@page import="java.util.List"%>
 <%@page import="Modelo.Persona"%>
 <%@page import="Modelo.Jugador"%>
 <%
@@ -152,17 +154,39 @@
                                 </div><br>
                             </div>
                         </div>
-                    </div>
+                        <div class="col-md-8 col-md-offset-2">
+                            <div class="card">
+                                <div class="card-content">
+                                    <h3 class="card-title">Comentarios</h3>                                    
+                                    <ul class="list-group" id="contenedorComentarios"></ul>                                                                        
+                                    <div class="row">                                            
+                                        <div class="col-md-12">                                                
+                                            <div class="form-group">
+                                                <input type="text" id="txtIdUsuarioComentado" value="<%=objJugadorVisto.getIdJugador()%>" hidden>
+                                                <% if (objJugador.getIdJugador() != objJugadorVisto.getIdJugador()) { %>
+                                                    <label>Comentario</label>                                                
+                                                    <div class="form-group label-floating">
+                                                        <label class="control-label"> Agregar comentario a <%=objJugadorVisto.getAlias()%></label>
+                                                        <textarea id="txtContenidoComentario" class="form-control" rows="5"></textarea>
+                                                    </div>
+                                                    <button type="submit" class="btn btn-danger pull-right agregarComentario">Agregar</button>
+                                                <%}%>
+                                            </div>                                                                                                
+                                        </div>                                                        
+                                    </div>                                                                                                                                                                        
+                                </div>
+                            </div>
+                        </div>
+                    </div>                    
                 </div>
             </div>
         </div>
         <%@include file="../includes/importsJS.jsp" %>
         <script>
             $("#nombrepagina").text("Perfil de <%=objJugadorVisto.getAlias()%>");
-            window.onload = function (){
-                
-                CargarNotificaciones();
-                
+            window.onload = function (){                
+                CargarNotificaciones();                
+                VerComentarios();                
             }
         </script><%}%>
     </body>

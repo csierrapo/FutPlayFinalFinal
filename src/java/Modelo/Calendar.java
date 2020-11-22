@@ -7,6 +7,7 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -32,6 +33,10 @@ public class Calendar implements Serializable{
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "campo")
     private Campos campo;
+    
+    @OneToOne(fetch = FetchType.EAGER)    
+    @JoinColumn(name="Encuentro")   
+    private Encuentros encuentro;
     
     public Calendar() {
         
@@ -94,6 +99,12 @@ public class Calendar implements Serializable{
         this.campo = campo;
     }
 
-    
+    public Encuentros getEncuentro() {
+        return encuentro;
+    }
+
+    public void setEncuentro(Encuentros encuentro) {
+        this.encuentro = encuentro;
+    }  
     
 }

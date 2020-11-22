@@ -53,14 +53,17 @@
                                         </div>
                                         <div class="wizard-navigation">
                                             <ul class="nav nav-pills">
-                                                <li style="width: 33.3333%;" class="active">
+                                                <li style="width: 25%;" class="active">
                                                     <a href="#about" data-toggle="tab" aria-expanded="true">Tipo</a>
                                                 </li>
-                                                <li style="width: 33.3333%;">
+                                                <li style="width: 25%;">
                                                     <a href="#account" data-toggle="tab">Equipos</a>
                                                 </li>
-                                                <li style="width: 33.3333%;">
+                                                <li style="width: 25%;">
                                                     <a href="#address" data-toggle="tab">Campos</a>
+                                                </li>
+                                                <li style="width: 25%;">
+                                                    <a href="#fechaPanel" data-toggle="tab">Fecha</a>
                                                 </li>
                                             </ul>
                                         <div class="moving-tab" style="width: 142.49px; transform: translate3d(-8px, 0px, 0px); transition: transform 0s;">About</div></div>
@@ -138,7 +141,7 @@
                                                 </div>
                                             </div>
                                             <div class="tab-pane" id="address">
-                                                <h4 class="info-text">Selecciona el campo el el que deseas jugar</h4>
+                                                <h4 class="info-text">Selecciona el campo en el que deseas jugar</h4>
                                                 <div class="row">
                                                     <div class="col-lg-10 col-lg-offset-1">
                                                         
@@ -180,6 +183,36 @@
                                                          <%}%>
                                                   
                                                     </div>
+                                                </div>
+                                            </div>
+                                            <div class="tab-pane" id="fechaPanel">
+                                                <div class="row">
+                                                    <h4 class="info-text">Selecciona la fecha del encuentro</h4>
+                                                    <div>
+                                                        <div class="col-md-4 col-md-offset-4">
+                                                            <div class="card-description">
+                                                                <div class="col-md-12">
+                                                                    <div class="card card-pricing card-raised">
+                                                                        <div class="content" style="margin-bottom: 100px;">
+                                                                            <div class="col-md-6">
+                                                                                <div class="form-group">
+                                                                                    <label>Fecha</label>
+                                                                                    <input id="fechaEncuentro" class="form-control datepicker" type="text">
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-md-6">
+                                                                                <div class="form-group">
+                                                                                    <label>Hora</label>
+                                                                                    <input id="horaEncuentro" class="form-control timepicker" type="text">
+                                                                                </div>
+                                                                            </div>
+                                                                            
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>                                                                                                                                                                             
+                                                        </div>                                                        
+                                                    </div>                                                                                                        
                                                 </div>
                                             </div>
                                         </div>
@@ -224,6 +257,7 @@
         <%@include file="../includes/importsJS.jsp" %>
         <script>
             $("#encuentro").addClass('active');
+            $("#encuentrosOptions").addClass("in");
             CargarNotificaciones();
             
             if($("#noEncuentros").text() == "no"){

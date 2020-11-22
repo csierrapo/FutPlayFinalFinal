@@ -81,12 +81,45 @@
                                 <i class="material-icons">message</i>
                                 <p>Charla tecnica</p>
                             </a>
-                        </li>
-                        <li id="encuentro">
-                            <a href="../encuentro/verEncuentros.jsp">
+                        </li>                                                                       
+                        <li>
+                            <a data-toggle="collapse" href="#encuentrosOptions">
                                 <i class="material-icons">flash_on</i>
-                                <p>Encuentros</p>
+                                <p>Encuentros <b class="caret"></b></p>
                             </a>
+                            <div class="collapse" id="encuentrosOptions">
+                                <ul class="nav">
+                                    <li id="cronograma">
+                                        <a href="../encuentro/cronogramaEncuentros.jsp">
+                                            <p>Cronograma</p>
+                                        </a>
+                                    </li>
+                                    <li id="encuentro">
+                                        <a href="../encuentro/verEncuentros.jsp">                                            
+                                            <p>Mis Encuentros</p>
+                                        </a>
+                                    </li>                                                                      
+                                </ul>
+                            </div>
+                        </li>            
+                        <li id="campos">
+                            <a data-toggle="collapse" href="#camposOptions">
+                                <i class="material-icons">aspect_ratio</i>
+                                <p>Campos
+                                    <b class="caret"></b>
+                                </p>
+                            </a>
+                            <div class="collapse" id="camposOptions">
+                                <ul class="nav">
+                                    <li id="registrarcampos">
+                                        <a href="http://localhost:8080/FutPlayFinal/material-dashboard/pages/campo/registrarCampoJugador.jsp">Agregar campo</a>
+                                    </li>
+                                    <!--<li id="administrarcampos">
+                                        <a href="#" class="btnVerCampos">Administrar campos</a>
+                                        <input type="text" name="idVerCampos" id="idVerCampos" hidden value="<%=objJugador.getIdJugador()%>"/>
+                                    </li>-->
+                                </ul>
+                            </div>
                         </li>
                     </ul>
                 </div>
